@@ -1,30 +1,30 @@
 
 
 const fs = require('fs');
-const prompt = require('prompt');
+//const {prompt} = require('inquirer');
 const inquirer = require('inquirer');
 const mysql = require("mysql2");
 const { join } = require('path');
-const Connection = require('mysql2/typings/mysql/lib/Connection');
+//const Connection = require('mysql2/typings/mysql/lib/Connection');
 const { exit } = require('process');
 require("console.table")
 
 
-const db = mysql.createConnection({
+const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
     database: "tracker_db",
-    port: 3001
+    password: ""
 });
 
-Connection.connect(function (err) {
+connection.connect(function (err) {
     if (err) throw err;
-    basePrompts();
 });
 
 function viewDepartments() {
-    db.query('SELECT * from ');
+    const query = 'SELECT * from departments';
     connection.query(query, function (err, res) {
+        console.log(res)
         if (err) throw err;
         console.table('All Departments:', res);
         basePrompts();
@@ -38,7 +38,7 @@ function viewDepartments() {
 //     })
 
 function viewEmployees() {
-    db.query('SELECT * from employee');
+    const query ='SELECT * from employee';
     Connection.query(query, function (err, res) {
         if (err) throw err;
         console.log(res.length + ' employees found!');
@@ -55,7 +55,7 @@ function viewEmployees() {
 // })
 
 function viewRoles() {
-    db.query("SELECT * from role");
+    const query = "SELECT * from role";
     connection.query(query, function (err, res) {
         if (err) throw err;
         console.table('All Roles:', res);
@@ -148,6 +148,7 @@ const employeeQuestions = [
 
 function basePrompts() {
     inquirer.prompt(baseQuestions).then(function (answer) {
+        console.log(answer.actionWanted)
         switch (answer.actionWanted) {
             case "View All Departments":
                 viewDepartments();
@@ -209,11 +210,21 @@ function departmentPrompts() {
 }
 
 
+const showAllDeparments = () => {
+    db.query('SELECT department_name FROM department', (err, movies) => {
+      if (err) throw err;
+      console.table(movies);
+      init();
+    });
+  };
+
+
+
 
 function init() {
-    inquirer.prompt(basePrompts).then(function (response) {
-       //missing link
-    })
+    //inquirer.prompt(basePrompts).then(function (response) {
+    //missing link
+    //})
     basePrompts();
 };
 
