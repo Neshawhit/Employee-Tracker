@@ -1,13 +1,15 @@
 
 
 const fs = require('fs');
-//const {prompt} = require('inquirer');
 const inquirer = require('inquirer');
 const mysql = require("mysql2");
 const { join } = require('path');
-//const Connection = require('mysql2/typings/mysql/lib/Connection');
 const { exit } = require('process');
-require("console.table")
+require("console.table");
+const teamArray = [];
+
+
+const prompt = inquirer.createPromptModule();
 
 
 const connection = mysql.createConnection({
@@ -22,7 +24,7 @@ connection.connect(function (err) {
 });
 
 function viewDepartments() {
-    const query = 'SELECT * from departments';
+    const query = 'SELECT * from department';
     connection.query(query, function (err, res) {
         console.log(res)
         if (err) throw err;
@@ -38,8 +40,8 @@ function viewDepartments() {
 //     })
 
 function viewEmployees() {
-    const query ='SELECT * from employee';
-    Connection.query(query, function (err, res) {
+    const query = 'SELECT * from employee';
+    connection.query(query, function (err, res) {
         if (err) throw err;
         console.log(res.length + ' employees found!');
         console.table('All Employees:', res);
@@ -91,7 +93,7 @@ const baseQuestions = [
         type: "list",
         name: "actionWanted",
         message: "What would you like to do?",
-        choices: ["view all departments", "view all roles", "view all employees", "Add Role", "Add an Employee", "Add a Deparment", "Update an Employee's Role"]
+        choices: ["View All Departments", "View All Roles", "View All Employees", "Add Role", "Add an Employee", "Add a Deparment", "Update an Employee's Role"]
 
     }
 ];
@@ -147,82 +149,76 @@ const employeeQuestions = [
 ]
 
 function basePrompts() {
-    inquirer.prompt(baseQuestions).then(function (answer) {
+    prompt(baseQuestions).then(function (answer) {
         console.log(answer.actionWanted)
         switch (answer.actionWanted) {
             case "View All Departments":
                 viewDepartments();
+                break;
             case "View All Roles":
                 viewRoles();
+                break;
             case "View All Employees":
                 viewEmployees();
+                break;
             case "Add Role":
                 rolePrompts();
                 break;
-            case "Add Employee":
+            case "Add an Employee":
                 employeePrompts();
                 break;
-            case "Add department":
+            case "Add a Department":
                 departmentPrompts();
                 break;
-            case "Exit":
-                exit();
-            default:
+            case "Update an Employee's Role":
+                updateRole();
                 break;
-
-
-            // default:
-            //     const generated = generateTeam(teamArray);
-            //     console.log(teamArray);
-            //     console.log(generated);
-            //     fs.writeFile("template.html", generateTeam(teamArray), err => {
-            //         err ? console.error(err) : console.info('success');
-            // })
-        }
+            default:
+                exit();
+                break;
+    
+        } 
     });
 }
 
 
 
-function viewEmployees() {
-
-}
 
 function employeePrompts() {
-    inquirer.prompt(employeeQuestions).then(function ({ employeeFirstName, employeeLastName, employeeRole, employeeManager }) {
+    prompt(employeeQuestions).then(function ({ employeeFirstName, employeeLastName, employeeRole, employeeManager }) {
         teamArray.push(new Employee(employeeFirstName, employeeLastName, employeeRole, employeeManager));
         basePrompts();
     });
 }
 
 function rolePrompts() {
-    inquirer.prompt(roleQuestions).then(function ({ roleName, roleSalary, roleDepartment }) {
+    prompt(roleQuestions).then(function ({ roleName, roleSalary, roleDepartment }) {
         teamArray.push(new role(roleName, roleSalary, roleDepartment));
         basePrompts();
     });
 }
 
 function departmentPrompts() {
-    inquirer.prompt(departmentQuestions).then(function ({ name }) {
+    prompt(departmentQuestions).then(function ({ name }) {
         teamArray.push(new department(name));
         basePrompts();
     });
 }
 
 
-const showAllDeparments = () => {
-    db.query('SELECT department_name FROM department', (err, movies) => {
-      if (err) throw err;
-      console.table(movies);
-      init();
-    });
-  };
+// const showAllDeparments = () => {
+//     db.query('SELECT department_name FROM department', (err, movies) => {
+//         if (err) throw err;
+//         console.table(movies);
+//         init();
+//     });
+// };
 
 
 
 
 function init() {
-    //inquirer.prompt(basePrompts).then(function (response) {
+    //prompt(basePrompts).then(function (response) {
     //missing link
     //})
     basePrompts();
