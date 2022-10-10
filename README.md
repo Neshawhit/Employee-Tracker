@@ -5,7 +5,6 @@ A command-line application that allows users to manage a company's employee data
 ## Table of Contents
 * [Installation](#installation)
 * [Usage](#usage)
-* [License](#license)
 * [Visuals](#visuals)
 
 ## Installations 
