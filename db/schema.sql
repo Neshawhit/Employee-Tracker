@@ -1,4 +1,4 @@
-/* contains queries for creating the database and the tables inside */
+
 
 DROP DATABASE IF EXISTS tracker_db;
 CREATE DATABASE tracker_db;
@@ -6,7 +6,7 @@ CREATE DATABASE tracker_db;
 USE tracker_db;
 
 CREATE TABLE department (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30)
 );
 
@@ -14,7 +14,7 @@ CREATE TABLE role (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(30), 
     salary DECIMAL, 
-    department_id INT,
+    department_id INT NOT NULL,
     FOREIGN KEY (department_id) REFERENCES department(id)
 );
 
@@ -42,3 +42,6 @@ role
 id   title   salary   department_id
 1   Engineer    150000    2 */
 
+DELETE FROM  deparment WHERE {condition};
+DELETE FROM  role WHERE {condition};
+DELETE FROM  employee WHERE {condition};

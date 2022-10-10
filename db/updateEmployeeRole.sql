@@ -1,5 +1,9 @@
 UPDATE employee
 SET role = "{response}";
-/* WHERE id = 1; */
+/* WHERE id = ; */
 
+
+UPDATE produce
+SET name = "strawberry"
+WHERE id = 1;
 
